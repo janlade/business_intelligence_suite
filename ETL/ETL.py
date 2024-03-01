@@ -1,5 +1,4 @@
 from pages.extract import *
-# from pages.1_extract import *
 from pages.transform import *
 import streamlit as st
 
