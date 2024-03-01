@@ -26,26 +26,11 @@ def data_selection(data):
     selected_options = {}
 
     # Select column for indexing
-
-    selected_options['index'] = st.selectbox("Select the column from the dataset to use as index:", ["None"] + data.columns.tolist(), index=None)
+    selected_options['index'] = st.selectbox("Select a column from the dataset to use as an index:", ["None"] + data.columns.tolist(), index=None)
 
     # Select target variable
-    selected_options['target_variable'] = st.selectbox("Select the target variable from the dataset:", data.columns, index=len(data.columns) - 1)
+    # selected_options['target_variable'] = st.selectbox("Select the target variable from the dataset:", data.columns, index=len(data.columns) - 1)
 
-    # # Button to confirm selection
-    # if st.button("Confirm Selection"):
-    #     process_selected_options(data, selected_options)
-    
-    # return None, None, None
-
-    # Button to confirm selection
-    # if st.button("Confirm Selection"):
-    #     # Process the selected options
-    #     data, target_variable, features = process_selected_options(data, selected_options)
-    #     return data, target_variable, features
-
-    # # If the button is not clicked or selection is not confirmed, return the original data and None for other variables
-    # return None, None, None
 
     return selected_options
 
@@ -85,7 +70,7 @@ def process_selected_options(data, selected_options):
     - features:
     """
     index_column = selected_options['index']
-    target_variable_name = selected_options['target_variable']
+    # target_variable_name = selected_options['target_variable']
 
     # Index the dataset by the selected index column
     data[index_column] = pd.to_datetime(data[index_column], format="mixed", dayfirst=True).dt.date
@@ -94,10 +79,10 @@ def process_selected_options(data, selected_options):
     # st.write("Index of the DataFrame:", data.index.name)
 
     # Select the target variable
-    target_variable = data[target_variable_name]
+    # target_variable = data[target_variable_name]
 
     # Create feature dataset by dropping the target variable
-    features = data.drop(target_variable_name, axis=1)
+    # features = data.drop(target_variable_name, axis=1)
 
     if data.index.name:
         st.success("Selection Confirmed")
@@ -109,7 +94,7 @@ def process_selected_options(data, selected_options):
     # st.write("Selected Target Variable:", target_variable_name)
     # st.write("Selected Features:", features.columns.tolist())
     
-    return data, target_variable, features
+    return data#, target_variable, features
 
 
 def impute_missing_values(data):
@@ -179,7 +164,7 @@ def transform():
 
     Steps:
     1. Data Loading: Load data from the specified file path.
-    2. Data Selection: Allow the user to select columns for further processing.
+    2. Data Selection: Allow the user to select a column for indexing.
     3. Handle Missing Values: Impute or delete missing values based on user selection.
     4. Handle Outliers: Apply outlier handling techniques such as Winsorization or Transformation.
     5. Save Data: Save the processed data to a CSV file.
@@ -201,14 +186,14 @@ def transform():
         if data is not None:
             st.divider()
             selected_options = data_selection(data)
-            # st.write("Selected Options:", selected_options)
+            st.write("Selected Options:", selected_options)
 
             if st.button("Confirm Selection", key="confirm_selection_button"):
                 if selected_options['index'] == 'None':
                     st.session_state.data_selected = data.copy()  # No index selected, so keep the original data
                     st.write(data)
                 else:
-                    data_selected, target_variable, features = process_selected_options(data, selected_options)
+                    data_selected = process_selected_options(data, selected_options)
                     st.write(data_selected)
                     st.session_state.data_selected = data_selected  # Store the selected data in session state
 
