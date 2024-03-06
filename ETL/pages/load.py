@@ -41,6 +41,7 @@ def load_data(file_path):
         st.error(f"Error loading data: {str(e)}")
         return None
 
+
 def load():
     """
     Load original and transformed data.

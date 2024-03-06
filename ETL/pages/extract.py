@@ -22,6 +22,7 @@ def load_data_widget():
         st.info("Please upload a file.")
         return None, None
 
+
 def save_data(data, file_path, file_name):
     """
     Save the provided Pandas DataFrame to a CSV file.
@@ -49,7 +50,6 @@ def save_data(data, file_path, file_name):
             st.info("No data to save.")
     except Exception as e:
         st.error(f"Error saving data: {str(e)}")
-
 
 
 def extract():

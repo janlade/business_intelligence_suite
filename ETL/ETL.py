@@ -11,5 +11,3 @@ def etl():
     st.page_link("pages/load.py", label="Load", icon= "🔷")
 
 
-if __name__ == "__main__":
-    etl()
