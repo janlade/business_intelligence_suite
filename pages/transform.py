@@ -1,5 +1,7 @@
-from pages import extract
-from pages import load
+# from pages import extract
+# from pages import load
+from pages.extract import save_data
+from pages.load import load_data
 
 import pandas as pd
 import streamlit as st
@@ -175,7 +177,7 @@ def transform():
     st.header(":violet[T]ransform", divider="violet")
     # Step 1: Data Loading
     st.subheader("Data Transformation")
-    df = load.load_data(file_path_origin)
+    df = load_data(file_path_origin)
     
     if df is not None:
         data, file_name = df
@@ -258,10 +260,10 @@ def transform():
             if "outlier_processed_data" in st.session_state: # Check if outlier_processed_data is stored in session state
                 st.divider()
                 if st.button("Save Data", key="save_data_button"):
-                    extract.save_data(st.session_state.outlier_processed_data, file_path_transformed, file_name)
+                    save_data(st.session_state.outlier_processed_data, file_path_transformed, file_name)
 
             
 
 if __name__ == "__main__":
-    st.page_link("ETL.py", label="Zurück zur Startseite", icon="🏠")
+    st.page_link("pages/etl.py", label="Zurück", icon="🏠")
     transform()

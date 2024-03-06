@@ -72,5 +72,5 @@ def extract():
 
 
 if __name__ == "__main__":
-    st.page_link("ETL.py", label="Zurück zur Startseite", icon="🏠")
+    st.page_link("pages/etl.py", label="Zurück", icon="🏠")
     extract()
