@@ -1,0 +1,1 @@
+from pages.load import load_data
