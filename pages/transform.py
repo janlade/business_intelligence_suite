@@ -6,8 +6,8 @@ from pages.load import load_data
 import pandas as pd
 import streamlit as st
 from scipy.stats.mstats import winsorize
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import PolynomialFeatures
+from sklearn.preprocessing import LabelEncoder
+
 
 file_path_transformed=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data"
 file_path_origin=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data\original_data"
@@ -59,7 +59,7 @@ def outlier_handling():
     return selected_method
 
 
-def process_selected_options(data, selected_options):
+def index_data(data, selected_options):
     """
     Process the selected options.
 
@@ -98,6 +98,36 @@ def process_selected_options(data, selected_options):
     
     return data#, target_variable, features
 
+
+def encode_string_features(data):
+    """
+    Encode string features in the dataset using LabelEncoder.
+
+    Parameters:
+    - data (DataFrame): The Pandas DataFrame containing the dataset.
+
+    Returns:
+    - data (DataFrame): The updated Pandas DataFrame with encoded string features.
+    """
+
+    # Check if any selected feature is of string data type and encode it with LabelEncoder
+    string_features = [col for col in data.columns if data[col].dtype == object]
+    
+    if any(data[col].dtype == object for col in data.columns):
+        string_features_str = ", ".join(string_features)
+        st.warning(f":warning: The selected features [{string_features_str}] are object values and will be encoded")
+
+        label_classes = {} # store label for each class in a dict
+        for col in string_features:
+            label = LabelEncoder()
+            label.fit(data[col].drop_duplicates())
+            data[col] = label.transform(data[col])
+    
+            classes = label.classes_
+            label_classes[col] = classes
+    
+    # st.write(label_classes)
+    return data
 
 def impute_missing_values(data):
     """
@@ -160,6 +190,19 @@ def winzorize_outliers(data):
     return data
 
 
+    # Check if any selected feature is of string data type and encode it with LabelEncoder
+    string_features = [feature for feature in internal_features if data[feature].dtype == object]
+    if any(data[feature].dtype == object for feature in internal_features) or data[target_variable].dtype == object:
+        string_features_str = ", ".join(string_features)
+        st.warning(f":warning: The selected features [{string_features_str}] are object values and will be encoded")
+
+        for feature in string_features:
+            label = LabelEncoder()
+            label.fit(data[feature].drop_duplicates())
+            data[feature] = label.transform(data[feature])
+
+
+
 def transform():
     """
     Perform data transformation including data loading, selection, missing value handling, outlier handling, and data saving.
@@ -167,9 +210,10 @@ def transform():
     Steps:
     1. Data Loading: Load data from the specified file path.
     2. Data Selection: Allow the user to select a column for indexing.
-    3. Handle Missing Values: Impute or delete missing values based on user selection.
-    4. Handle Outliers: Apply outlier handling techniques such as Winsorization or Transformation.
-    5. Save Data: Save the processed data to a CSV file.
+    3. Automatically encodes object values with LabelEncoder.
+    4. Handle Missing Values: Impute or delete missing values based on user selection.
+    5. Handle Outliers: Apply outlier handling techniques such as Winsorization or Transformation.
+    6. Save Data: Save the processed data to a CSV file.
 
     Returns:
     - None
@@ -195,13 +239,18 @@ def transform():
                     st.session_state.data_selected = data.copy()  # No index selected, so keep the original data
                     st.write(data)
                 else:
-                    data_selected = process_selected_options(data, selected_options)
-                    st.write(data_selected)
+                    data_selected = index_data(data, selected_options)
                     st.session_state.data_selected = data_selected  # Store the selected data in session state
+                    st.write(data_selected)
 
+            # Call encode_string_features function
+            if "data_selected" in st.session_state:
+                data_encoded = encode_string_features(st.session_state.data_selected)
+                st.session_state.data_encoded = data_encoded
+                # st.write("data_encoded", data_encoded)
 
             # Step 3: Handle Missing Values
-            if "data_selected" in st.session_state: # Check if data_selected is stored in session state
+            if "data_encoded" in st.session_state: # Check if data_selected is stored in session state
                 st.divider()
                 missing_value_method = missing_value_handling()
 
