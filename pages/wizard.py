@@ -1,7 +1,15 @@
 import streamlit as st
+import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
 from pages.load import load_data
+
+# Metrics for Regression
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+
+# import Models
+from pages.linear_regression_model import lr_build
+from pages.rf_regression_model import rf_build
 
 file_path_transformed=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data"
 
@@ -48,9 +56,9 @@ def ml_selection(data):
     #         st.warning("All selected features have been scaled")
     #         st.session_state.scaler = scaler
 
-    # st.write(target_variable)
-    # st.write(model_selection)
-    # st.write(internal_features)
+    st.write(target_variable)
+    st.write(model_selection)
+    st.write(internal_features)
 
     return target_variable, model_selection, internal_features
 
@@ -72,7 +80,65 @@ def x_and_y(data, internal_features, target_variable):
 
     return X, y
 
+def train_model(X, y, model_selection):
+    """Function for model training and evaluation"""
 
+    if st.button("Train Model", help="Results in training, may take some time!"):
+        if model_selection == "Linear Regression":
+            y_pred, y_test, x_pred, y_train, best_params = lr_build(X, y)
+            st.success(f"{model_selection} trained successfully :clap:")
+            
+            # Store the results in session state
+            st.session_state.y_test = y_test
+            st.session_state.y_pred = y_pred
+            st.session_state.y_train = y_train
+            st.session_state.x_pred = x_pred
+            st.session_state.model_selection = model_selection
+            st.session_state.best_params = best_params
+
+            return y_pred, y_test, x_pred, y_train, model_selection, best_params
+
+        elif model_selection == "Random Forest":
+            y_pred, y_test, x_pred, y_train, best_params = rf_build(X, y)
+            st.success(f"{model_selection} trained successfully! :clap:")
+
+            # Store the results in session state
+            st.session_state.y_test = y_test
+            st.session_state.y_pred = y_pred
+            st.session_state.y_train = y_train
+            st.session_state.x_pred = x_pred
+            st.session_state.model_selection = model_selection
+
+            return y_pred, y_test, x_pred, y_train, model_selection, best_params
+
+@st.cache_data
+def get_metrics(y_pred, y_test, x_pred, y_train, model_selection):
+    """Function to calculate and display evaluation metrics"""
+        
+    # Calculate Absolute Squared Error (MAE)
+    mae_test = mean_absolute_error(y_test, y_pred)
+    mae_train = mean_absolute_error(y_train, x_pred)
+
+    # Calculate Mean Squared Error (MSE)
+    mse_test = mean_squared_error(y_test, y_pred)
+    mse_train = mean_squared_error(y_train, x_pred)
+
+    # Calculate R-squared (R2)
+    r2_test = r2_score(y_test, y_pred)
+    r2_train = r2_score(y_train, x_pred)
+
+    # Create a table with the metrics
+    metrics_data = {
+        "Dataset": ["Train Set", "Test Set"],
+        "R-squared (R2)": [r2_train, r2_test],
+        "Mean Absolute Error (MAE)": [mae_train, mae_test],
+        "Mean Squared Error (MSE)": [mse_train, mse_test]
+        }
+
+    metrics_table = pd.DataFrame(metrics_data)
+
+    # Display the table
+    st.table(metrics_table)
 
 def wizard():
     """
@@ -101,7 +167,16 @@ def wizard():
         if model_selection is not None:
             # Step 4: Creating X and y
             X, y = x_and_y(data, internal_features, target_variable)
+            st.write("X", X)
+            st.write("y", y)
             st.divider()
+
+            # Step 4: Train Model
+            y_pred, y_test, x_pred, y_train, model_selection, best_params = train_model(X, y, model_selection)
+            st.write("GridSearchCV Hyperparameters:", best_params)
+
+            # Step 5: Get Metrics
+            get_metrics(y_pred, y_test, x_pred, y_train, model_selection)
 
 if __name__ == "__main__":
     st.page_link("app.py", label="Zurück zur Startseite", icon="🏠")
