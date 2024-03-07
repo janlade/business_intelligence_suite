@@ -22,17 +22,12 @@ def data_selection(data):
 
     Returns:
     - selected_features: List of selected features.
-    - target_variable: Name of the selected target variable.
     """
     # Create a dictionary to store selected options
     selected_options = {}
 
     # Select column for indexing
     selected_options['index'] = st.selectbox("Select a column from the dataset to use as an index:", ["None"] + data.columns.tolist(), index=None)
-
-    # Select target variable
-    # selected_options['target_variable'] = st.selectbox("Select the target variable from the dataset:", data.columns, index=len(data.columns) - 1)
-
 
     return selected_options
 
@@ -45,6 +40,7 @@ def missing_value_handling():
     - selected_method: Method selected for handling missing values.
     """
     selected_method = st.selectbox("Select method for handling missing values:", ["None", "Imputation", "Deletion"], index=None)
+    
     return selected_method
 
 
@@ -56,6 +52,7 @@ def outlier_handling():
     - selected_method: Method selected for handling outliers.
     """
     selected_method = st.selectbox("Select method for handling outliers:", ["None", "Winsorization", "Transformation"], index=None)
+    
     return selected_method
 
 
@@ -72,31 +69,21 @@ def index_data(data, selected_options):
     - features:
     """
     index_column = selected_options['index']
-    # target_variable_name = selected_options['target_variable']
 
     # Index the dataset by the selected index column
     data[index_column] = pd.to_datetime(data[index_column], format="mixed", dayfirst=True).dt.date
+
     # Set the index
     data.set_index(index_column, inplace=True)  
     # st.write("Index of the DataFrame:", data.index.name)
 
-    # Select the target variable
-    # target_variable = data[target_variable_name]
-
-    # Create feature dataset by dropping the target variable
-    # features = data.drop(target_variable_name, axis=1)
-
     if data.index.name:
-        st.success("Selection Confirmed")
+        st.success("Selection confirmed")
         # st.success(f"Dataset successfully indexed by {index_column}")
     else:
         st.error("No index column is set.")
-    # Process further actions with selected options
-    # st.write("Selected Index Column:", index_column)
-    # st.write("Selected Target Variable:", target_variable_name)
-    # st.write("Selected Features:", features.columns.tolist())
-    
-    return data#, target_variable, features
+
+    return data
 
 
 def encode_string_features(data):
@@ -163,6 +150,7 @@ def impute_missing_values(data):
     data.drop_duplicates(inplace=True)
 
     st.success("Imputed Missing Values and deleted duplicates")
+    
     return data
 
 
@@ -187,19 +175,8 @@ def winzorize_outliers(data):
         data[col] = winsorize(data[col], limits=[0.05, 0.05])
 
     st.success("Outliers handled with winzorization")
+    
     return data
-
-
-    # Check if any selected feature is of string data type and encode it with LabelEncoder
-    string_features = [feature for feature in internal_features if data[feature].dtype == object]
-    if any(data[feature].dtype == object for feature in internal_features) or data[target_variable].dtype == object:
-        string_features_str = ", ".join(string_features)
-        st.warning(f":warning: The selected features [{string_features_str}] are object values and will be encoded")
-
-        for feature in string_features:
-            label = LabelEncoder()
-            label.fit(data[feature].drop_duplicates())
-            data[feature] = label.transform(data[feature])
 
 
 
@@ -219,6 +196,7 @@ def transform():
     - None
     """
     st.header(":violet[T]ransform", divider="violet")
+    
     # Step 1: Data Loading
     st.subheader("Data Transformation")
     df = load_data(file_path_origin)
@@ -232,7 +210,7 @@ def transform():
         if data is not None:
             st.divider()
             selected_options = data_selection(data)
-            st.write("Selected Options:", selected_options)
+            # st.write("Selected Options:", selected_options)
 
             if st.button("Confirm Selection", key="confirm_selection_button"):
                 if selected_options['index'] == 'None':
