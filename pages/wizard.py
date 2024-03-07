@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
-
+import matplotlib.pyplot as plt
+import numpy as np
 from pages.load import load_data
 
 # Metrics for Regression
@@ -21,7 +22,7 @@ def ml_selection(data):
     target_variable = st.selectbox("Select target measure", data.columns, index=len(data.columns) - 1)
 
     # Select regression or classification task
-    model_selection = st.selectbox("Select the task", ["Linear Regression", "Random Forest"], index=None)
+    model_selection = st.selectbox("Select a Model", ["Linear Regression", "Random Forest"], index=None)
     
     # Multiselect for internal features
     internal_features = data.drop(columns=[target_variable]) #st.multiselect("Select features", data.columns)
@@ -56,9 +57,9 @@ def ml_selection(data):
     #         st.warning("All selected features have been scaled")
     #         st.session_state.scaler = scaler
 
-    st.write(target_variable)
-    st.write(model_selection)
-    st.write(internal_features)
+    # st.write(target_variable)
+    # st.write(model_selection)
+    # st.write(internal_features)
 
     return target_variable, model_selection, internal_features
 
@@ -80,10 +81,11 @@ def x_and_y(data, internal_features, target_variable):
 
     return X, y
 
+
 def train_model(X, y, model_selection):
     """Function for model training and evaluation"""
 
-    if st.button("Train Model", help="Results in training, may take some time!"):
+    if st.button("Train Model", help="Results in training, may take some time!", key="trainmodelbutton"):
         if model_selection == "Linear Regression":
             y_pred, y_test, x_pred, y_train, best_params = lr_build(X, y)
             st.success(f"{model_selection} trained successfully :clap:")
@@ -110,6 +112,7 @@ def train_model(X, y, model_selection):
             st.session_state.model_selection = model_selection
 
             return y_pred, y_test, x_pred, y_train, model_selection, best_params
+
 
 @st.cache_data
 def get_metrics(y_pred, y_test, x_pred, y_train, model_selection):
@@ -140,6 +143,51 @@ def get_metrics(y_pred, y_test, x_pred, y_train, model_selection):
     # Display the table
     st.table(metrics_table)
 
+    return metrics_table
+
+
+@st.cache_data
+def plot_results(y_pred, y_test, x_pred, y_train, model_selection):
+    """Function to plot results of Regression task"""
+    
+    # Function to plot actual vs. predicted values and display the plot
+    plt.figure(figsize=(12, 8), layout='constrained')
+
+    # Plot actual vs. predicted values
+    plt.scatter(y_train, x_pred, alpha=0.7)
+
+    # Add Ideal Prediction Line (First Bisector)
+    min_val = min(np.min(y_train), np.min(x_pred))
+    max_val = max(np.max(y_train), np.max(x_pred))
+    plt.plot([min_val, max_val], [min_val, max_val], color='red', linestyle='--', label='Ideal Prediction Line')
+        
+    plt.xlabel('Actual Values', fontsize=16)
+    plt.ylabel('Predicted Values', fontsize=16)
+    plt.title('Actual vs. Predicted Values on Training Set', fontsize=26)
+    plt.tight_layout()
+    plt.legend()
+
+    st.pyplot(plt.gcf())
+
+    plt.figure(figsize=(12, 8), layout='constrained')
+
+    # Plot actual vs. predicted values
+    plt.scatter(y_test, y_pred, alpha=0.7)
+
+    # Add Ideal Prediction Line (First Bisector)
+    min_val = min(np.min(y_test), np.min(y_pred))
+    max_val = max(np.max(y_test), np.max(y_pred))
+    plt.plot([min_val, max_val], [min_val, max_val], color='red', linestyle='--', label='Ideal Prediction Line')
+        
+    plt.xlabel('Actual Values', fontsize=16)
+    plt.ylabel('Predicted Values', fontsize=16)
+    plt.title('Actual vs. Predicted Values on Test Set', fontsize=26)
+    plt.tight_layout()
+    plt.legend()
+
+    st.pyplot(plt.gcf())
+
+
 def wizard():
     """
     Displaying the Wizard home screen.
@@ -167,16 +215,35 @@ def wizard():
         if model_selection is not None:
             # Step 4: Creating X and y
             X, y = x_and_y(data, internal_features, target_variable)
-            st.write("X", X)
-            st.write("y", y)
             st.divider()
 
             # Step 4: Train Model
-            y_pred, y_test, x_pred, y_train, model_selection, best_params = train_model(X, y, model_selection)
-            st.write("GridSearchCV Hyperparameters:", best_params)
+            result = train_model(X, y, model_selection) # to handle event if button is not pressed yet
 
-            # Step 5: Get Metrics
-            get_metrics(y_pred, y_test, x_pred, y_train, model_selection)
+            if result is not None: 
+                # Unpack the result tuple
+                y_pred, y_test, x_pred, y_train, model_selection, best_params = result
+                
+            else:
+                st.stop()
+                # st.warning("No model trained. Please click the train model button to train the model.")
+
+            
+            # Create an expander to display best_params and metrics
+            with st.expander("Model Details"):
+                # Display best_params
+                st.subheader("GridSearchCV Hyperparameters:", divider="violet")
+                st.write(best_params)
+
+                # Display metrics
+                st.subheader("Metrics:", divider="violet")
+                get_metrics(y_pred, y_test, x_pred, y_train, model_selection)
+
+                # Display plots
+                st.subheader("Plot Results:", divider="violet")
+                plot_results(y_pred, y_test, x_pred, y_train, model_selection)
+
+
 
 if __name__ == "__main__":
     st.page_link("app.py", label="Zurück zur Startseite", icon="🏠")
