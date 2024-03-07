@@ -4,7 +4,21 @@ from sklearn.ensemble import RandomForestRegressor
 import joblib
 
 @st.cache_resource
-def rf_build(X, y):
+def rf_model(X, y, selected_file):
+    """
+    Train a Random Forest Regression model using GridSearchCV and return values for evaluation.
+
+    Parameters:
+    - X (DataFrame): The features for training.
+    - y (DataFrame): The target variable for training.
+
+    Returns:
+    - y_pred (array): Predicted target values for the test set.
+    - y_test (array): True target values for the test set.
+    - x_pred (array): Predicted target values for the training set.
+    - y_train (array): True target values for the training set.
+    - best_params (dict): Best hyperparameters found by GridSearchCV.
+    """    
     # Train-Test Split
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, shuffle=True)
     
@@ -40,6 +54,6 @@ def rf_build(X, y):
     y_pred = best_rf_model.predict(X_test)
 
     # Save the best model to a .pkl file using joblib
-    joblib.dump(best_rf_model, 'best_random_forest_regressor_model.pkl')
+    joblib.dump(best_rf_model, f'{selected_file}_best_random_forest_regressor_model.pkl')
 
     return y_pred, y_test, x_pred, y_train, best_params
