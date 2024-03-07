@@ -190,18 +190,6 @@ def winzorize_outliers(data):
     return data
 
 
-    # Check if any selected feature is of string data type and encode it with LabelEncoder
-    string_features = [feature for feature in internal_features if data[feature].dtype == object]
-    if any(data[feature].dtype == object for feature in internal_features) or data[target_variable].dtype == object:
-        string_features_str = ", ".join(string_features)
-        st.warning(f":warning: The selected features [{string_features_str}] are object values and will be encoded")
-
-        for feature in string_features:
-            label = LabelEncoder()
-            label.fit(data[feature].drop_duplicates())
-            data[feature] = label.transform(data[feature])
-
-
 
 def transform():
     """

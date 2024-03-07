@@ -14,6 +14,8 @@ def load_data(file_path):
 
     Returns:
     - data (DataFrame): The loaded data as a Pandas DataFrame.
+    - selected_file (str): The name of the selected CSV file.
+
     """
     try:
         # Get a list of CSV files in the specified directory
