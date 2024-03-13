@@ -3,7 +3,7 @@ import pandas as pd
 import os
 
 file_path_origin=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data\original_data"
-#Relative Paths: Use relative paths within your app directory. This makes the app more portable across different environments. For example, you could create a folder within your app directory to store uploaded files and reference them using relative paths.
+
 
 def load_data_widget():
     """Function for loading CSV Data"""

@@ -1,5 +1,3 @@
-# from pages import extract
-# from pages import load
 from pages.extract import save_data
 from pages.load import load_data
 
