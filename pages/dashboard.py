@@ -21,7 +21,6 @@ from pages.wizard import ml_selection
 file_path_transformed=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data"
 
 
-
 def load_model(model_option, selected_file):
     model_filename = None
 
@@ -68,7 +67,6 @@ def make_predictions(internal_features, model_option, data, selected_file):
 
 
 def dashboard():
-    
     st.header(":violet[D]ashboard", divider="violet")
     
     # Step 1: Load transformed Data
