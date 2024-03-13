@@ -14,7 +14,7 @@ from pages.rf_regression_model import rf_model
 file_path_transformed=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data"
 
 
-def ml_selection(data):
+def ml_selection(data, include_target=True):
     """
     Selects target and model options.
 
@@ -26,20 +26,21 @@ def ml_selection(data):
     - model_selection (str): The selected model option (e.g., "Linear Regression", "Random Forest").
     - internal_features (DataFrame): The selected internal features.
     """
-    # Selectbox for target variable
-    target_variable = st.selectbox("Select target measure", data.columns, index=len(data.columns) - 1)
+    if include_target:
+        # Selectbox for target variable
+        target_variable = st.selectbox("Select target measure", data.columns, index=len(data.columns) - 1)
+    else:
+        target_variable = data.columns[-1]  # Just pick the last column as the target variable
 
     # Select regression or classification task
     model_selection = st.selectbox("Select a Model", ["Linear Regression", "Random Forest"], index=None)
     
-    # Multiselect for internal features
+    # create internal features
     internal_features = data.drop(columns=[target_variable]) #st.multiselect("Select features", data.columns)
 
     if not model_selection:
-        st.warning(":warning: Please select a task.")
-
-
-    return target_variable, model_selection, internal_features
+        st.stop()
+        st.warning(":warning: Please select a model.")
 
 
 def x_and_y(data, internal_features, target_variable):
