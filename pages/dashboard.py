@@ -1,13 +1,23 @@
+__author__ = "Jan Lade"
+__copyright__ = "Copyright 2024, Jan Lade"
+__credits__ = ["Jan Lade", "Tom Debus"]
+__version__ = "1.0"
+__maintainer__ = "Jan Lade"
+__status__ = "Production"
+
+
+#imports
 import streamlit as st
 import joblib
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-
+# import functions
 from pages.load import load_data
 from pages.wizard import ml_selection
 
+# local path for storing data
 file_path_transformed=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data"
 
 
@@ -55,7 +65,6 @@ def make_predictions(internal_features, model_option, data, selected_file):
     
     else:
         st.error("No model loaded. Please load a model first.")
-
 
 
 def dashboard():
