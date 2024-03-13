@@ -27,7 +27,7 @@ from pages.linear_regression_model import lr_model
 from pages.rf_regression_model import rf_model
 from pages.load import load_data
 
-# local path where data is saved
+# local path for storing data
 file_path_transformed=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data"
 
 
