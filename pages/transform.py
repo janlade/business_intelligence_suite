@@ -32,6 +32,33 @@ def data_selection(data):
     return selected_options
 
 
+def eda(data):
+    """Function for selecting EDA options"""
+
+    # Create a selectbox for EDA options
+    eda_option = st.selectbox("Select EDA Option", ["Data Shape", "Data Description", "Missing Values", "Data Types"], index=None)
+
+    # Perform EDA based on the user's choice
+    if eda_option == "Data Shape":
+        # st.subheader("Data Shape")
+        st.write("Number of Rows:", data.shape[0])
+        st.write("Number of Columns:", data.shape[1])
+
+    elif eda_option == "Data Description":
+        # st.subheader("Data Description")
+        st.write(data.describe())
+
+    elif eda_option == "Missing Values":
+        # st.subheader("Missing Values")
+        missing_data = data.isnull().sum()
+        st.write(missing_data)
+    
+    elif eda_option == "Data Types":
+        # st.subheader("Data Types")
+        data_types = data.dtypes
+        st.write(data_types)
+
+
 def missing_value_handling():
     """
     Function to select the method for handling missing values.
@@ -115,6 +142,7 @@ def encode_string_features(data):
     
     # st.write(label_classes)
     return data
+
 
 def impute_missing_values(data):
     """
@@ -205,6 +233,8 @@ def transform():
         data, file_name = df
     
         st.write(data)
+        st.divider()
+        eda(data) # Options to view exploratory data analysis
 
         # Step 2: Data Selection    
         if data is not None:
