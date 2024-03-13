@@ -14,7 +14,7 @@ import pandas as pd
 import streamlit as st
 from sklearn.preprocessing import LabelEncoder
 
-
+# local path for storing data
 file_path_transformed=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data"
 file_path_origin=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data\original_data"
 

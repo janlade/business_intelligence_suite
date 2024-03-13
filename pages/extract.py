@@ -11,7 +11,7 @@ import streamlit as st
 import pandas as pd
 import os
 
-
+# local path for storing data
 file_path_origin=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data\original_data"
 
 
