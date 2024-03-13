@@ -1,9 +1,17 @@
+__author__ = "Jan Lade"
+__copyright__ = "Copyright 2024, Jan Lade"
+__credits__ = ["Jan Lade", "Tom Debus"]
+__version__ = "1.0"
+__maintainer__ = "Jan Lade"
+__status__ = "Production"
+
+
+#imports
 from pages.extract import save_data
 from pages.load import load_data
-
+from scipy.stats.mstats import winsorize
 import pandas as pd
 import streamlit as st
-from scipy.stats.mstats import winsorize
 from sklearn.preprocessing import LabelEncoder
 
 
@@ -28,6 +36,33 @@ def data_selection(data):
     selected_options['index'] = st.selectbox("Select a column from the dataset to use as an index:", ["None"] + data.columns.tolist(), index=None)
 
     return selected_options
+
+
+def eda(data):
+    """Function for selecting EDA options"""
+
+    # Create a selectbox for EDA options
+    eda_option = st.selectbox("Select EDA Option", ["Data Shape", "Data Description", "Missing Values", "Data Types"], index=None)
+
+    # Perform EDA based on the user's choice
+    if eda_option == "Data Shape":
+        # st.subheader("Data Shape")
+        st.write("Number of Rows:", data.shape[0])
+        st.write("Number of Columns:", data.shape[1])
+
+    elif eda_option == "Data Description":
+        # st.subheader("Data Description")
+        st.write(data.describe())
+
+    elif eda_option == "Missing Values":
+        # st.subheader("Missing Values")
+        missing_data = data.isnull().sum()
+        st.write(missing_data)
+    
+    elif eda_option == "Data Types":
+        # st.subheader("Data Types")
+        data_types = data.dtypes
+        st.write(data_types)
 
 
 def missing_value_handling():
@@ -114,6 +149,7 @@ def encode_string_features(data):
     # st.write(label_classes)
     return data
 
+
 def impute_missing_values(data):
     """
     Handle missing values in a Pandas DataFrame using imputation and drops duplicates.
@@ -177,7 +213,6 @@ def winzorize_outliers(data):
     return data
 
 
-
 def transform():
     """
     Perform data transformation including data loading, selection, missing value handling, outlier handling, and data saving.
@@ -203,6 +238,8 @@ def transform():
         data, file_name = df
     
         st.write(data)
+        st.divider()
+        eda(data) # Options to view exploratory data analysis
 
         # Step 2: Data Selection    
         if data is not None:

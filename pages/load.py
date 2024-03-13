@@ -1,9 +1,19 @@
+__author__ = "Jan Lade"
+__copyright__ = "Copyright 2024, Jan Lade"
+__credits__ = ["Jan Lade", "Tom Debus"]
+__version__ = "1.0"
+__maintainer__ = "Jan Lade"
+__status__ = "Production"
+
+
+#imports
 import streamlit as st
 import pandas as pd
 import os
 
 file_path_transformed=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data"
 file_path_origin=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data\original_data"
+
 
 def load_data(file_path):
     """

@@ -1,20 +1,33 @@
+__author__ = "Jan Lade"
+__copyright__ = "Copyright 2024, Jan Lade"
+__credits__ = ["Jan Lade", "Tom Debus"]
+__version__ = "1.0"
+__maintainer__ = "Jan Lade"
+__status__ = "Production"
+
+
+#imports
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from pages.load import load_data
 import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+# sns and plt styling
 sns.set_theme(style='darkgrid')
 matplotlib.rcParams['font.family'] = "sans-serif"
+
 # Metrics for Regression
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 
-# import Models
+# import Models and functions
 from pages.linear_regression_model import lr_model
 from pages.rf_regression_model import rf_model
+from pages.load import load_data
 
+# local path where data is saved
 file_path_transformed=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data"
 
 
