@@ -16,4 +16,4 @@ def home():
     st.write("Debus Project 1.0")
     st.page_link("pages/etl.py", label="ETL", icon= "🔷")
     st.page_link("pages/wizard.py", label="ML Wizard", icon= "🔶")
-    # st.page_link("pages/dashboard.py", label="Load", icon= "🔷")
+    st.page_link("pages/dashboard.py", label="Dashboard", icon= "🔷")
