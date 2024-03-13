@@ -1,4 +1,14 @@
+__author__ = "Jan Lade"
+__copyright__ = "Copyright 2024, Jan Lade"
+__credits__ = ["Jan Lade", "Tom Debus"]
+__version__ = "1.0"
+__maintainer__ = "Jan Lade"
+__status__ = "Production"
+
+
+#imports
 import streamlit as st
+
 
 def etl():
     """
@@ -17,6 +27,8 @@ def etl():
     st.page_link("pages/extract.py", label="Extract", icon= "🔷")
     st.page_link("pages/transform.py", label="Transform", icon= "🔶")
     st.page_link("pages/load.py", label="Load", icon= "🔷")
+
+
 
 if __name__ == "__main__":
     st.page_link("app.py", label="Zurück zur Startseite", icon="🏠")

@@ -1,4 +1,14 @@
+__author__ = "Jan Lade"
+__copyright__ = "Copyright 2024, Jan Lade"
+__credits__ = ["Jan Lade", "Tom Debus"]
+__version__ = "1.0"
+__maintainer__ = "Jan Lade"
+__status__ = "Production"
+
+
+#imports
 import streamlit as st
+
 
 def home():
     """
@@ -12,7 +22,7 @@ def home():
     Returns:
     - None
     """    
-    st.header(":violet[S]ales Intelligence Suite", divider="violet")
+    st.header(":violet[B]usiness Intelligence Suite", divider="violet")
     st.write("Debus Project 1.0")
     st.page_link("pages/etl.py", label="ETL", icon= "🔷")
     # st.page_link("pages/wizard.py", label="Transform", icon= "🔶")
