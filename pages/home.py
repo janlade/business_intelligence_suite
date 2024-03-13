@@ -27,3 +27,4 @@ def home():
     st.page_link("pages/etl.py", label="ETL", icon= "🔷")
     st.page_link("pages/wizard.py", label="ML Wizard", icon= "🔶")
     st.page_link("pages/dashboard.py", label="Dashboard", icon= "🔷")
+    st.write("by Jan Lade:violet[.]")
