@@ -1,12 +1,20 @@
+__author__ = "Jan Lade"
+__copyright__ = "Copyright 2024, Jan Lade"
+__credits__ = ["Jan Lade", "Tom Debus"]
+__version__ = "1.0"
+__maintainer__ = "Jan Lade"
+__status__ = "Production"
+
+
+#imports
 from pages.extract import save_data
 from pages.load import load_data
-
+from scipy.stats.mstats import winsorize
 import pandas as pd
 import streamlit as st
-from scipy.stats.mstats import winsorize
 from sklearn.preprocessing import LabelEncoder
 
-
+# local path for storing data
 file_path_transformed=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data"
 file_path_origin=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data\original_data"
 
@@ -203,7 +211,6 @@ def winzorize_outliers(data):
     st.success("Outliers handled with winzorization")
     
     return data
-
 
 
 def transform():

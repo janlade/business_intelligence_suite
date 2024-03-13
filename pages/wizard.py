@@ -1,16 +1,33 @@
+__author__ = "Jan Lade"
+__copyright__ = "Copyright 2024, Jan Lade"
+__credits__ = ["Jan Lade", "Tom Debus"]
+__version__ = "1.0"
+__maintainer__ = "Jan Lade"
+__status__ = "Production"
+
+
+#imports
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from pages.load import load_data
+import matplotlib
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# sns and plt styling
+sns.set_theme(style='darkgrid')
+matplotlib.rcParams['font.family'] = "sans-serif"
 
 # Metrics for Regression
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 
-# import Models
+# import Models and functions
 from pages.linear_regression_model import lr_model
 from pages.rf_regression_model import rf_model
+from pages.load import load_data
 
+# local path for storing data
 file_path_transformed=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data"
 
 
@@ -63,6 +80,37 @@ def x_and_y(data, internal_features, target_variable):
     # st.session_state.y = y
 
     return X, y
+
+
+def compute_correlation(X, y, target_variable):
+    """Function to compute correlation with a button for visualization"""
+
+    # Button to initiate the correlation computation
+    compute_correlation_button = st.button("Compute Correlations")
+
+    plot_placeholder = st.empty()
+
+    if compute_correlation_button:
+        # Calculate correlation with the target variable
+        correlations = X.corrwith(y)
+
+        # Plot correlation with the target variable
+        plt.figure(figsize=(12, 8), layout='constrained')
+        sns.barplot(x=correlations, y=correlations.index)
+        plt.xlabel('Correlation', fontsize=16)
+        plt.ylabel('Features', fontsize=16)
+        plt.title(f'Feature Correlations with target measure: {target_variable}', fontsize=26)
+        plt.tight_layout()
+
+        # Display the plot using Streamlit
+        st.pyplot(plt.gcf())
+
+        # Store the plot in the session state
+        st.session_state.plot = plt.gcf()
+    else:
+        # If the button is not clicked, check if the plot is in the session state and display it
+        if "plot" in st.session_state:
+            plot_placeholder.pyplot(st.session_state.plot)
 
 
 def train_model(X, y, model_selection, selected_file):
@@ -226,15 +274,20 @@ def wizard():
         st.divider()
 
         # Step 2: Feature & Target Selection
-        st.subheader("Model Selection")
+        st.subheader("Model Selection", divider="violet")
         target_variable, model_selection, internal_features = ml_selection(data)
 
         if model_selection is not None:
             # Step 4: Creating X and y
             X, y = x_and_y(data, internal_features, target_variable)
             st.divider()
+            
+            st.subheader("Correlation Analysis", divider="violet")
+            compute_correlation(X, y, target_variable)
+            st.divider()
 
             # Step 4: Train Model
+            st.subheader("Training", divider="violet")
             result = train_model(X, y, model_selection, file_name) 
 
             if result is not None: # to handle event if button is not pressed
