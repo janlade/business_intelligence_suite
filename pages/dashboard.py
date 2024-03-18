@@ -106,7 +106,7 @@ def dashboard():
         data, selected_file = df
 
         # Load needed input for predictions
-        target_variable, model_selection, internal_features = ml_selection(data, include_target=False)
+        target_variable, model_selection, internal_features = ml_selection(data)
         
         # Make predictions
         make_predictions(internal_features, model_selection, data, selected_file)

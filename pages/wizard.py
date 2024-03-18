@@ -31,7 +31,7 @@ from pages.load import load_data
 file_path_transformed=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. Semester\Sales_Intelligence_Suite\data"
 
 
-def ml_selection(data, include_target=True):
+def ml_selection(data):
     """
     Selects target and model options.
 
@@ -43,12 +43,9 @@ def ml_selection(data, include_target=True):
     - model_selection (str): The selected model option (e.g., "Linear Regression", "Random Forest").
     - internal_features (DataFrame): The selected internal features.
     """
-    if include_target:
-        # Selectbox for target variable
-        target_variable = st.selectbox("Select target measure", data.columns, index=len(data.columns) - 1)
-    else:
-        target_variable = data.columns[-1]  # Just pick the last column as the target variable
-   
+
+    target_variable = st.selectbox("Select target measure", data.columns, index=len(data.columns) - 1)
+
     # Select regression task
     model_selection = st.selectbox("Select a Model", ["Linear Regression", "Random Forest"], index=None)
     
