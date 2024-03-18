@@ -22,6 +22,17 @@ file_path_transformed=r"C:\Users\jan.lade\OneDrive - Jedox AG\Documents\DHBW\6. 
 
 
 def load_model(model_option, selected_file):
+    """
+    Load the selected machine learning model from a .pkl file based on the model option and the selected file.
+
+    Parameters:
+    - model_option (str): The selected machine learning model option ("Linear Regression" or "Random Forest").
+    - selected_file (str): The name of the selected file, used to construct the model filename.
+
+    Returns:
+    - model: The loaded machine learning model if found, otherwise None.
+    - selected_file (str): The name of the selected file.
+    """    
     model_filename = None
 
     if model_option == "Linear Regression":
@@ -39,6 +50,18 @@ def load_model(model_option, selected_file):
 
 
 def make_predictions(internal_features, model_option, data, selected_file):
+    """
+    Make predictions using the selected machine learning model based on user input features.
+
+    Parameters:
+    - internal_features (DataFrame): The selected internal features.
+    - model_option (str): The selected machine learning model option.
+    - data (DataFrame): The Pandas DataFrame containing the dataset.
+    - selected_file (str): The name of the selected file, used to load the corresponding model.
+
+    Returns:
+    - None
+    """
     user_input = {}
 
     # Unpack the tuple returned by load_model
@@ -67,6 +90,12 @@ def make_predictions(internal_features, model_option, data, selected_file):
 
 
 def dashboard():
+    """
+    Display the dashboard for making predictions based on selected machine learning model.
+
+    Returns:
+    - None
+    """
     st.header(":violet[D]ashboard", divider="violet")
     
     # Step 1: Load transformed Data
