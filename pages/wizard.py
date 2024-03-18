@@ -43,7 +43,7 @@ def ml_selection(data):
     - model_selection (str): The selected model option (e.g., "Linear Regression", "Random Forest").
     - internal_features (DataFrame): The selected internal features.
     """
-
+    # Selectbox for target variable
     target_variable = st.selectbox("Select target measure", data.columns, index=len(data.columns) - 1)
 
     # Select regression task
