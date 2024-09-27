@@ -31,5 +31,5 @@ def etl():
 
 
 if __name__ == "__main__":
-    st.page_link("app.py", label="Zurück zur Startseite", icon="🏠")
+    st.page_link("app.py", label="Landing Page", icon="🏠")
     etl()

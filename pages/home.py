@@ -22,8 +22,8 @@ def home():
     Returns:
     - None
     """    
-    st.header(":violet[B]usiness Intelligence Suite", divider="violet")
-    st.write("Debus Project 1.0")
+    st.header(":violet[M]achine :violet[L]earning Platform", divider="violet")
+    st.write("Bachelor Thesis")
     st.page_link("pages/etl.py", label="ETL", icon= "🔷")
     st.page_link("pages/wizard.py", label="ML Wizard", icon= "🔶")
     st.page_link("pages/dashboard.py", label="Dashboard", icon= "🔷")
